@@ -11,7 +11,7 @@ jieba
 
 ### 使用方法
 
-1，准备数据，参考`data`文件夹和`vocab`文件夹
+1, 准备数据，参考`data`文件夹和`vocab`文件夹
 
 2, 训练模型 `train_elmo.py`
 
