@@ -17,7 +17,9 @@ jieba
 
 3, 输出模型 `dump_weights.py`
 
-4, 输出word embedding到hdf5文件 `usage_token.py`
+4, 把`options.json`里的261改成262
+
+5, 输出word embedding到hdf5文件 `usage_token.py`
 
 ### 实验结果
 
