@@ -27,14 +27,14 @@ all_tokens = set(['<S>', '</S>'] + tokenized_question[0])
 for context_sentence in tokenized_context:
     for token in context_sentence:
         all_tokens.add(token)
-vocab_file = 'vocab/vocab.txt'
+vocab_file = 'vocab/cn_vocab'
 # with open(vocab_file, 'w') as fout:
 #     fout.write('\n'.join(all_tokens))
 
 # Location of pretrained LM.  Here we use the test fixtures.
-datadir = "./"#os.path.join('tests', 'fixtures', 'model')
+datadir = "./log/"#os.path.join('tests', 'fixtures', 'model')
 options_file = os.path.join(datadir, 'options.json')
-weight_file = os.path.join(datadir, 'dump_weights.hdf5')
+weight_file = 'dump_weights.hdf5'
 
 # Dump the token embeddings to a file. Run this once for your dataset.
 token_embedding_file = 'elmo_token_embeddings.hdf5'
