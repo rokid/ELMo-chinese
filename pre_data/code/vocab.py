@@ -30,22 +30,49 @@ for i in range(num_merges):
     print(best)
 
 
-word2count = {}
+def isEN(uchar):
+    if (uchar >= u'\u0041' and uchar <= u'\u005a') or (uchar >= u'\u0061' and uchar <= u'\u007a'):
+        return True
+    else:
+        return False
+
+def isZH(s):
+    if not ('\u4e00' <= s <= '\u9fa5'):
+        return False
+    return True
+
+def isDigit(x):
+    try:
+        x=int(x)
+        return isinstance(x,int)
+    except ValueError:
+        return False
+
+# word2count = {}
 vocab = set()
 dir = os.listdir("../../data")
 for file in dir:
+    print(file)
     f = open("../../data/" + file, mode="r", encoding="utf-8")
     lines = f.readlines()
     for line in lines:
         word_list = jieba.lcut(line,HMM=False)
         for word in word_list:
+            if isEN(word[0]) and len(word)>20:
+                continue
+            if isDigit(word[0]) and len(word)>=5:
+                continue
+            if not isZH(word[0]) and not isEN(word[0]) and not isDigit(word[0]):
+                continue
+            word = word.lower()
             vocab.add(word.replace("\n",""))
-            if word.replace("\n","") not in word2count:
-                word2count[word] = 1
-            else:
-                word2count[word] +=1
 
-f2 = open("../../vocab/cn_vocab",mode="w",encoding="utf-8")
+            # if word.replace("\n","") not in word2count:
+            #     word2count[word] = 1
+            # else:
+            #     word2count[word] +=1
+
+f2 = open("../../vocab/cn_vocab_lower",mode="w",encoding="utf-8")
 
 f2.write("</S>")
 f2.write("\n")
