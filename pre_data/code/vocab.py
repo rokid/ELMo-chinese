@@ -30,16 +30,52 @@ for i in range(num_merges):
     print(best)
 
 
+def recursive_cut(line):
+    result = []
+    for big_word in jieba.lcut(line,HMM=False):
+            subword_list = get_subword_list(big_word)
+            if isinstance(subword_list, list):
+                go_subword_list(subword_list,result)
+            elif isinstance(subword_list, str):
+                result.append(subword_list)
+            else:
+                print("error")
+    return result
+
 def isEN(uchar):
     if (uchar >= u'\u0041' and uchar <= u'\u005a') or (uchar >= u'\u0061' and uchar <= u'\u007a'):
         return True
     else:
         return False
 
-def isZH(s):
-    if not ('\u4e00' <= s <= '\u9fa5'):
+def isZH(char):
+    if not ('\u4e00' <= char <= '\u9fa5'):
         return False
     return True
+
+
+def get_subword_list(big_word):
+    if not isZH(big_word[0]):
+        return big_word
+    if len(big_word)>3:
+        jieba.del_word(big_word)
+        return jieba.lcut(big_word, HMM=False)
+    else:
+        return big_word
+
+def go_subword_list(input_list,result):
+    for big_word in input_list:
+        if len(big_word)>3:
+            subword_list = get_subword_list(big_word)
+            if isinstance(subword_list,list):
+                go_subword_list(subword_list,result)
+            elif isinstance(subword_list,str):
+                result.append(subword_list)
+            else:
+                print("error")
+        else:
+            result.append(big_word)
+
 
 def isDigit(x):
     try:
@@ -48,7 +84,7 @@ def isDigit(x):
     except ValueError:
         return False
 
-# word2count = {}
+
 vocab = set()
 dir = os.listdir("../../data")
 for file in dir:
@@ -56,23 +92,16 @@ for file in dir:
     f = open("../../data/" + file, mode="r", encoding="utf-8")
     lines = f.readlines()
     for line in lines:
-        word_list = jieba.lcut(line,HMM=False)
+        word_list = recursive_cut(line)
         for word in word_list:
-            if isEN(word[0]) and len(word)>20:
+            if isEN(word[0]):
                 continue
-            if isDigit(word[0]) and len(word)>=5:
+            if isDigit(word[0]):
                 continue
-            if not isZH(word[0]) and not isEN(word[0]) and not isDigit(word[0]):
-                continue
-            word = word.lower()
             vocab.add(word.replace("\n",""))
 
-            # if word.replace("\n","") not in word2count:
-            #     word2count[word] = 1
-            # else:
-            #     word2count[word] +=1
 
-f2 = open("../../vocab/cn_vocab_lower",mode="w",encoding="utf-8")
+f2 = open("../../vocab/cn_vocab2",mode="w",encoding="utf-8")
 
 f2.write("</S>")
 f2.write("\n")
