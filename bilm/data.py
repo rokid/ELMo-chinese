@@ -1,7 +1,7 @@
 # originally based on https://github.com/tensorflow/models/tree/master/lm_1b
 import glob
 import random
-import jieba
+from recursive_cut import *
 import numpy as np
 
 from typing import List
@@ -23,7 +23,7 @@ class Vocabulary(object):
         self._unk = -1
         self._bos = -1
         self._eos = -1
-
+        self.count = 0
         with open(filename,encoding="utf-8") as f:
             idx = 0
             for line in f:
@@ -84,10 +84,15 @@ class Vocabulary(object):
 
         if split:
             word_ids = [
-                self.word_to_id(cur_word) for cur_word in jieba.lcut(sentence,HMM=False)
+                self.word_to_id(cur_word) for cur_word in recursive_cut(sentence)
             ]
         else:
             word_ids = [self.word_to_id(cur_word) for cur_word in sentence]
+
+        if self.count%100000==0:
+            print(self.count)
+
+        self.count+=1
 
         if reverse:
             return np.array([self.eos] + word_ids + [self.bos], dtype=np.int32)
@@ -130,7 +135,7 @@ class UnicodeCharsVocabulary(Vocabulary):
         self.bow_char = 258  # <begin word>
         self.eow_char = 259  # <end word>
         self.pad_char = 260 # <padding>
-
+        self.count2 = 0
         num_words = len(self._id_to_word)
 
         self._word_char_ids = np.zeros([num_words, max_word_length],
@@ -187,10 +192,13 @@ class UnicodeCharsVocabulary(Vocabulary):
         '''
         if split:
             chars_ids = [self.word_to_char_ids(cur_word)
-                     for cur_word in jieba.lcut(sentence,HMM=False)]
+                     for cur_word in recursive_cut(sentence)]
         else:
             chars_ids = [self.word_to_char_ids(cur_word)
                      for cur_word in sentence]
+        if self.count2%100000==0:
+            print(self.count2)
+        self.count2+=1
         if reverse:
             return np.vstack([self.eos_chars] + chars_ids + [self.bos_chars])
         else:
@@ -398,7 +406,7 @@ class LMDataset(object):
 
         if self._shuffle_on_load:
             random.shuffle(sentences)
-
+       
         ids = [self.vocab.encode(sentence, self._reverse)
                for sentence in sentences]
         if self._use_char_inputs:

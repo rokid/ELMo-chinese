@@ -16,7 +16,7 @@ def main(args):
     n_gpus = 1
 
     # number of tokens in training data (this for 1B Word Benchmark)
-    n_train_tokens = 768648884
+    n_train_tokens = 999999999
 
     options = {
      'bidirectional': True,
