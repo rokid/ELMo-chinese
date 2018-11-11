@@ -11,7 +11,7 @@ jieba
 
 ### 使用方法
 
-1, 准备数据，参考`data`文件夹和`vocab`文件夹，（每个data文件不要太大，否则内存不够）
+1, 准备数据，参考`data`文件夹和`vocab`文件夹，用`pre_data`下的`vocab.py`处理出词典（每个data文件不要太大，否则内存不够）
 
 2, 训练模型 `train_elmo.py`
 
