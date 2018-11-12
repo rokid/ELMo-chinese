@@ -84,7 +84,7 @@ class Vocabulary(object):
 
         if split:
             word_ids = [
-                self.word_to_id(cur_word) for cur_word in recursive_cut(sentence)
+                self.word_to_id(cur_word) for cur_word in sentence
             ]
         else:
             word_ids = [self.word_to_id(cur_word) for cur_word in sentence]
@@ -192,7 +192,7 @@ class UnicodeCharsVocabulary(Vocabulary):
         '''
         if split:
             chars_ids = [self.word_to_char_ids(cur_word)
-                     for cur_word in recursive_cut(sentence)]
+                     for cur_word in sentence]
         else:
             chars_ids = [self.word_to_char_ids(cur_word)
                      for cur_word in sentence]
@@ -306,9 +306,19 @@ def _get_batch(generator, batch_size, num_steps, max_word_length):
                 next_pos = cur_pos + how_many
 
                 inputs[i, cur_pos:next_pos] = cur_stream[i][0][:how_many]
-                if max_word_length is not None:
+                try:
+                  if max_word_length is not None:
                     char_inputs[i, cur_pos:next_pos] = cur_stream[i][1][
                                                                     :how_many]
+                except:
+                    print(np.shape(char_inputs))
+                    print(np.shape(cur_stream))
+                    print(cur_pos)
+                    print(next_pos)
+                    print(how_many)
+                    print(cur_stream[i])
+                    print(cur_stream[i][1])
+                    print()
                 targets[i, cur_pos:next_pos] = cur_stream[i][0][1:how_many+1]
 
                 cur_pos = next_pos
@@ -406,14 +416,24 @@ class LMDataset(object):
 
         if self._shuffle_on_load:
             random.shuffle(sentences)
-       
-        ids = [self.vocab.encode(sentence, self._reverse)
-               for sentence in sentences]
-        if self._use_char_inputs:
-            chars_ids = [self.vocab.encode_chars(sentence, self._reverse)
-                     for sentence in sentences]
-        else:
-            chars_ids = [None] * len(ids)
+
+        ids = []
+        chars_ids = []
+        for sentence in sentences:
+            temp = recursive_cut(sentence)
+            id=self.vocab.encode(temp, self._reverse)
+            chars_id=self.vocab.encode_chars(temp, self._reverse)
+            assert(len(id)==len(chars_id))
+            ids.append(id)
+            chars_ids.append(chars_id)
+
+        # ids = [self.vocab.encode(sentence, self._reverse)
+        #        for sentence in sentences]
+        # if self._use_char_inputs:
+        #     chars_ids = [self.vocab.encode_chars(sentence, self._reverse)
+        #              for sentence in sentences]
+        # else:
+        #     chars_ids = [None] * len(ids)
 
         print('Loaded %d sentences.' % len(ids))
         print('Finished loading')
