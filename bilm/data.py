@@ -306,19 +306,11 @@ def _get_batch(generator, batch_size, num_steps, max_word_length):
                 next_pos = cur_pos + how_many
 
                 inputs[i, cur_pos:next_pos] = cur_stream[i][0][:how_many]
-                try:
-                  if max_word_length is not None:
+                
+                if max_word_length is not None:
                     char_inputs[i, cur_pos:next_pos] = cur_stream[i][1][
                                                                     :how_many]
-                except:
-                    print(np.shape(char_inputs))
-                    print(np.shape(cur_stream))
-                    print(cur_pos)
-                    print(next_pos)
-                    print(how_many)
-                    print(cur_stream[i])
-                    print(cur_stream[i][1])
-                    print()
+                
                 targets[i, cur_pos:next_pos] = cur_stream[i][0][1:how_many+1]
 
                 cur_pos = next_pos
