@@ -9,7 +9,8 @@ from bilm.data import BidirectionalLMDataset
 
 def main(args):
     # load the vocab
-    vocab = load_vocab(args.vocab_file, 50)
+    max_word_len = 20
+    vocab = load_vocab(args.vocab_file, max_word_len)
 
     # define the options
     batch_size = 128  # batch size for each GPU
@@ -30,7 +31,7 @@ def main(args):
        [5, 256],
        [6, 512],
        [7, 1024]],
-      'max_characters_per_token': 50,
+      'max_characters_per_token': max_word_len,
       'n_characters': 261,
       'n_highway': 2},
     
