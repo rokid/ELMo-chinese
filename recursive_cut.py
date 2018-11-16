@@ -29,7 +29,7 @@ def isZH(char):
 def get_subword_list(big_word):
     if not isZH(big_word[0]):
         return big_word
-    if len(big_word)>3:
+    if len(big_word)>4:
         jieba.del_word(big_word)
         return jieba.lcut(big_word, HMM=False)
     else:
@@ -37,7 +37,7 @@ def get_subword_list(big_word):
 
 def go_subword_list(input_list,result):
     for big_word in input_list:
-        if len(big_word)>3:
+        if len(big_word)>4:
             subword_list = get_subword_list(big_word)
             if isinstance(subword_list,list):
                 go_subword_list(subword_list,result)
