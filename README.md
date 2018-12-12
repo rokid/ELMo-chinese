@@ -28,7 +28,7 @@ jieba
 
 用可视化工具看合理
 
-textmatch任务提升AUC 2-4
+textmatch任务提升AUC 1-2
 
 ### License
 
