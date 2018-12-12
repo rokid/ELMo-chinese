@@ -1,5 +1,8 @@
 ### ELMo-chinese
+
 Deep contextualized word representations 中文 汉语
+
+只是输出 context-independent 的word embedding
 
 ### requirements
 
