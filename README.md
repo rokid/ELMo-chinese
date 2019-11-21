@@ -1,5 +1,7 @@
 # ELMo-chinese
 
+[![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
+
 > Deep contextualized word representations for Chinese.
 
 本仓库只是输出上下文无关的 word embedding。
